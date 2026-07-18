@@ -31,4 +31,4 @@ log-incr-rate.err_per_access_rate.log   0.965997        1571629417
 
 ## Install
 
-Please download release page or `mkr plugin install kazeburo/mackerel-plugin-log-incr-rate`.
+Please download release page or `mkr plugin install monitoring-forge/mackerel-plugin-log-incr-rate`.

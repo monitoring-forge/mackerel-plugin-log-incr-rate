@@ -1,4 +1,4 @@
-module github.com/kazeburo/mackerel-plugin-log-incr-rate
+module github.com/monitoring-forge/mackerel-plugin-log-incr-rate
 
 go 1.25.0
 
