@@ -2,98 +2,99 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"net/url"
 	"os"
+	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/jessevdk/go-flags"
-	"github.com/kazeburo/followparser"
+	"github.com/mackerelio/golib/pluginutil"
+	"github.com/monitoring-forge/followparser"
 	"golang.org/x/sync/errgroup"
 )
 
-// version by Makefile
 var version string
+var commit string
 
-type cmdOpts struct {
+type Opt struct {
 	LogFile     string `long:"log-file" description:"path to log file calculate lines increased" required:"true"`
 	BaseLogFile string `long:"base-log-file" description:"path to base log file count lines" required:"true"`
 	KeyPrefix   string `long:"key-prefix" description:"Metric key prefix" required:"true"`
+	Verbose     bool   `short:"v" long:"verbose" description:"Show verbose log"`
 	Version     bool   `short:"v" long:"version" description:"Show version"`
 }
 
-type simpleCounter struct {
-	total    float64
-	duration float64
-}
-
-func (lc *simpleCounter) Parse(b []byte) error {
-	lc.total = lc.total + 1
-	return nil
-}
-
-func (lc *simpleCounter) Finish(duration float64) {
-	lc.duration = duration
-}
-
-func (lc *simpleCounter) GetTotal() float64 {
-	return lc.total
-}
-
-func (lc *simpleCounter) GetDuration() float64 {
-	return lc.duration
-}
-
-func getStats(opts cmdOpts) error {
+func (opt *Opt) run() (string, error) {
 	logCounter := &simpleCounter{}
 	baseLogCounter := &simpleCounter{}
 	var g errgroup.Group
 
 	g.Go(func() error {
-		return followparser.Parse("incr-rate-log", opts.LogFile, logCounter)
+		fp := &followparser.Parser{
+			WorkDir:  pluginutil.PluginWorkDir(),
+			Callback: logCounter,
+			Silent:   !opt.Verbose,
+		}
+		_, err := fp.Parse(
+			fmt.Sprintf("incr-rate-log-%s-%s", opt.KeyPrefix, url.PathEscape(opt.LogFile)),
+			opt.LogFile,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to parse log file: %w", err)
+		}
+		return nil
 	})
 
 	g.Go(func() error {
-		return followparser.Parse("incr-rate-base", opts.BaseLogFile, baseLogCounter)
+		fp := &followparser.Parser{
+			WorkDir:  pluginutil.PluginWorkDir(),
+			Callback: baseLogCounter,
+			Silent:   !opt.Verbose,
+		}
+		_, err := fp.Parse(
+			fmt.Sprintf("incr-rate-base-%s-%s", opt.KeyPrefix, url.PathEscape(opt.BaseLogFile)),
+			opt.BaseLogFile,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to parse base log file: %w", err)
+		}
+		return nil
 	})
 
 	if err := g.Wait(); err != nil {
-		return err
+		return "", err
 	}
 
-	now := uint64(time.Now().Unix())
+	return opt.output(logCounter, baseLogCounter, time.Now()), nil
+}
+
+func (opt *Opt) output(logCounter, baseLogCounter *simpleCounter, now time.Time) string {
+	var output strings.Builder
+	timestamp := uint64(now.Unix())
 
 	if logCounter.GetDuration() > 0 {
-		fmt.Printf("log-incr-rate.%s_count.log\t%f\t%d\n",
-			opts.KeyPrefix,
+		fmt.Fprintf(&output, "log-incr-rate.%s_count.log\t%f\t%d\n",
+			opt.KeyPrefix,
 			logCounter.GetTotal()/logCounter.GetDuration(),
-			now)
+			timestamp)
 	}
 	if baseLogCounter.GetDuration() > 0 {
-		fmt.Printf("log-incr-rate.%s_count.base\t%f\t%d\n",
-			opts.KeyPrefix,
+		fmt.Fprintf(&output, "log-incr-rate.%s_count.base\t%f\t%d\n",
+			opt.KeyPrefix,
 			baseLogCounter.GetTotal()/baseLogCounter.GetDuration(),
-			now)
+			timestamp)
 	}
 
 	if logCounter.GetDuration() > 0 && baseLogCounter.GetDuration() > 0 && baseLogCounter.GetTotal() > 0 {
-		fmt.Printf("log-incr-rate.%s_rate.log\t%f\t%d\n",
-			opts.KeyPrefix,
+		fmt.Fprintf(&output, "log-incr-rate.%s_rate.log\t%f\t%d\n",
+			opt.KeyPrefix,
 			(logCounter.GetTotal()/logCounter.GetDuration())/(baseLogCounter.GetTotal()/baseLogCounter.GetDuration()),
-			now)
+			timestamp)
 	}
 
-	return nil
-}
-
-func printVersion() {
-	fmt.Printf(`%s %s
-Compiler: %s %s
-`,
-		os.Args[0],
-		version,
-		runtime.Compiler,
-		runtime.Version())
+	return output.String()
 }
 
 func main() {
@@ -101,11 +102,21 @@ func main() {
 }
 
 func _main() int {
-	opts := cmdOpts{}
-	psr := flags.NewParser(&opts, flags.HelpFlag|flags.PassDoubleDash)
+	opt := &Opt{}
+	psr := flags.NewParser(opt, flags.HelpFlag|flags.PassDoubleDash)
 	_, err := psr.Parse()
-	if opts.Version {
-		printVersion()
+	if opt.Version {
+		if commit == "" {
+			commit = "dev"
+		}
+		fmt.Printf(
+			"%s-%s\n%s/%s, %s, %s\n",
+			filepath.Base(os.Args[0]),
+			version,
+			runtime.GOOS,
+			runtime.GOARCH,
+			runtime.Version(),
+			commit)
 		return 0
 	}
 	if err != nil {
@@ -113,10 +124,11 @@ func _main() int {
 		return 1
 	}
 
-	err = getStats(opts)
+	output, err := opt.run()
 	if err != nil {
-		log.Printf("getStats :%v", err)
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return 1
 	}
+	fmt.Print(output)
 	return 0
 }
