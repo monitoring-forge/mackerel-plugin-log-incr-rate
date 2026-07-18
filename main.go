@@ -22,7 +22,7 @@ type Opt struct {
 	LogFile     string `long:"log-file" description:"path to log file calculate lines increased" required:"true"`
 	BaseLogFile string `long:"base-log-file" description:"path to base log file count lines" required:"true"`
 	KeyPrefix   string `long:"key-prefix" description:"Metric key prefix" required:"true"`
-	Verbose     bool   `short:"v" long:"verbose" description:"Show verbose log"`
+	Verbose     bool   `long:"verbose" description:"Show verbose log"`
 	Version     bool   `short:"v" long:"version" description:"Show version"`
 }
 
