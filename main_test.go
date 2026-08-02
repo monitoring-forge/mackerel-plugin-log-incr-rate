@@ -97,10 +97,10 @@ func TestOptRun(t *testing.T) {
 	}
 
 	// add more logs to the log file and run again
-	for i := 0; i < 5; i++ {
+	for i := range 5 {
 		appendToFile(t, logFile, fmt.Sprintf("new log line %d\n", i))
 	}
-	for i := 0; i < 15; i++ {
+	for i := range 15 {
 		appendToFile(t, baseLogFile, fmt.Sprintf("new base log line %d\n", i))
 	}
 	time.Sleep(1 * time.Second) // wait for a second to ensure the duration is non-zero
