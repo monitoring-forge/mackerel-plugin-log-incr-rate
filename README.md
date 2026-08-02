@@ -38,6 +38,7 @@ Application Options:
       --log-file=      path to log file calculate lines increased
       --base-log-file= path to base log file count lines
       --key-prefix=    Metric key prefix
+      --verbose        Show verbose log
   -v, --version        Show version
 
 Help Options:
@@ -53,6 +54,7 @@ Help Options:
 | `--base-log-file` | 必須 | 比率の分母となる基準ログファイルのパス |
 | `--key-prefix` | 必須 | メトリクス名のプレフィックス |
 | `--verbose` | 任意 | 詳細なログを出力する |
+| `--version` | 任意 | バージョンを出力する |
 
 ### 実行例
 
