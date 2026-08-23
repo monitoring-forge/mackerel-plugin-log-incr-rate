@@ -4,26 +4,16 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 
-	"github.com/jessevdk/go-flags"
 	"github.com/mackerelio/golib/pluginutil"
+	"github.com/monitoring-forge/flagrun"
 	"github.com/monitoring-forge/followparser"
 	"golang.org/x/sync/errgroup"
 )
 
 var version string
-var commit string
-
-const (
-	OK = iota
-	WARNING
-	CRITICAL
-	UNKNOWN
-)
 
 type Opt struct {
 	LogFile     string `long:"log-file" description:"path to log file calculate lines increased" required:"true"`
@@ -104,40 +94,14 @@ func (opt *Opt) output(logCounter, baseLogCounter *simpleCounter, now time.Time)
 	return output.String()
 }
 
-func main() {
-	os.Exit(_main())
-}
-
-func _main() int {
-	opt := &Opt{}
-	psr := flags.NewParser(opt, flags.HelpFlag|flags.PassDoubleDash)
-	_, err := psr.Parse()
-	if opt.Version {
-		if commit == "" {
-			commit = "dev"
-		}
-		fmt.Printf(
-			"%s-%s\n%s/%s, %s, %s\n",
-			filepath.Base(os.Args[0]),
-			version,
-			runtime.GOOS,
-			runtime.GOARCH,
-			runtime.Version(),
-			commit)
-		return OK
-	} else if flags.WroteHelp(err) {
-		fmt.Fprintf(os.Stdout, "%v\n", err)
-		return OK
-	} else if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		return UNKNOWN
-	}
-
+func (opt *Opt) Run(_ []string) (any, int) {
 	output, err := opt.run()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		return CRITICAL
+		return err, flagrun.CRITICAL
 	}
-	fmt.Print(output)
-	return OK
+	return output, flagrun.OK
+}
+
+func main() {
+	os.Exit(flagrun.Go(&Opt{}, flagrun.Version(version)))
 }
