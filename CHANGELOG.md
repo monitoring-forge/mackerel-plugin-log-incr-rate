@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.0.12](https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/compare/v0.0.11...v0.0.12) - 2026-08-23
+
+- ci: bump actions/checkout from 7.0.0 to 7.0.1 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/7
+- go: bump github.com/monitoring-forge/followparser from 0.2.14 to 0.2.15 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/9
+- improve readme by @kazeburo in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/10
+- Add pr-agent workflows and make lint, improve code quality by @kazeburo in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/11
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/12
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/13
+- refactor: use flagrun by @kazeburo in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/15
+
 ## [v0.0.11](https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/compare/v0.0.10...v0.0.11) - 2026-07-18
 
 - Refactor repository structure and improve CI/CD pipeline by @kazeburo in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/4
