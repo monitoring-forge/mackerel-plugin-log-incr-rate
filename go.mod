@@ -17,5 +17,5 @@ require (
 require (
 	github.com/avast/retry-go/v4 v4.7.0 // indirect
 	github.com/mackerelio/golib v1.2.2
-	github.com/monitoring-forge/flagrun v0.0.9
+	github.com/monitoring-forge/flagrun v0.0.10
 )
