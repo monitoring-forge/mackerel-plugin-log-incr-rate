@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.0.13](https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/compare/v0.0.12...v0.0.13) - 2026-10-10
+
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/16
+- ci: bump Songmu/tagpr from 1.20.1 to 1.20.2 in the dependencies group across 1 directory by @dependabot[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/19
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/23
+- ci: bump Songmu/tagpr from 1.20.2 to 1.20.3 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/21
+- go: bump the dependencies group across 1 directory with 4 updates by @dependabot[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/22
+- go: bump github.com/monitoring-forge/flagrun from 0.0.9 to 0.0.10 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/24
+- Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/26
+
 ## [v0.0.12](https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/compare/v0.0.11...v0.0.12) - 2026-08-23
 
 - ci: bump actions/checkout from 7.0.0 to 7.0.1 in the dependencies group by @dependabot[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/7
