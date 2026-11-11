@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.14](https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/compare/v0.0.13...v0.0.14) - 2026-11-11
+
+- ci: bump Songmu/tagpr from 1.21.4 to 1.22.0 in the tagpr group by @dependabot[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/35
+- go: bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/36
+
 ## [v0.0.13](https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/compare/v0.0.12...v0.0.13) - 2026-11-04
 
 - Sync files with `monitoring-forge/github-common` by @monitoring-forge-files-sync-action[bot] in https://github.com/monitoring-forge/mackerel-plugin-log-incr-rate/pull/16
